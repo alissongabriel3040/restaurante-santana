@@ -13,21 +13,32 @@ body{
     max-width: 600px;
     margin: auto;
     padding: 20px;
+    background: #f4f4f4;
 }
 
-h1{text-align:center;}
+h1{
+    text-align:center;
+}
 
 input, button{
     width:100%;
     padding:12px;
     margin-top:10px;
     box-sizing:border-box;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+
+button{
+    cursor:pointer;
+    border:none;
+    font-size:16px;
 }
 
 #resultado{
     margin-top:20px;
     padding:15px;
-    border:1px solid #ccc;
+    background:white;
     border-radius:10px;
 }
 
@@ -37,22 +48,14 @@ input, button{
     margin-top:20px;
 }
 
-/* 🔥 área de impressão */
-@media print {
-    body * {
-        visibility: hidden;
-    }
+button.criar{
+    background: blue;
+    color:white;
+}
 
-    #printArea, #printArea * {
-        visibility: visible;
-    }
-
-    #printArea {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-    }
+button.imprimir{
+    background: green;
+    color:white;
 }
 </style>
 </head>
@@ -64,18 +67,15 @@ input, button{
 
 <input type="number" step="0.01" id="valorPrato" placeholder="Valor do prato">
 
-<button onclick="criarComanda()">Criar Comanda</button>
+<button class="criar" onclick="criarComanda()">Criar Comanda</button>
 
-<button onclick="imprimirComanda()" style="background:green;color:white;">
+<button class="imprimir" onclick="imprimirComanda()">
 🖨️ Imprimir Comanda
 </button>
 
 <div id="resultado"></div>
 
 <div id="qrcode"></div>
-
-<!-- 🧾 ÁREA QUE VAI SER IMPRESSA -->
-<div id="printArea"></div>
 
 <script>
 
@@ -104,16 +104,13 @@ function criarComanda(){
 
     dadosComanda = `
         <h2>🍽 COMANDA RESTAURANTE SANTANA</h2>
+        <hr>
         <p><b>Número:</b> ${comanda}</p>
         <p><b>Valor:</b> R$ ${Number(valor).toFixed(2)}</p>
         <p><b>Link:</b> ${link}</p>
     `;
 
-    document.getElementById("resultado").innerHTML = `
-        <h3>Comanda criada</h3>
-        <p><b>Comanda:</b> ${comanda}</p>
-        <p><b>Prato:</b> R$ ${Number(valor).toFixed(2)}</p>
-    `;
+    document.getElementById("resultado").innerHTML = dadosComanda;
 
     document.getElementById("qrcode").innerHTML = "";
 
@@ -121,21 +118,55 @@ function criarComanda(){
         document.getElementById("qrcode"),
         {
             text: link,
-            width: 220,
-            height: 220
+            width: 200,
+            height: 200
         }
     );
-
-    document.getElementById("printArea").innerHTML = dadosComanda;
 }
 
 function imprimirComanda(){
+
     if(!dadosComanda){
         alert("Crie uma comanda primeiro!");
         return;
     }
 
-    window.print();
+    let janela = window.open("", "", "width=400,height=600");
+
+    janela.document.write(`
+        <html>
+        <head>
+        <title>Comanda</title>
+        <style>
+            body{
+                font-family: Arial;
+                text-align:center;
+                padding:20px;
+            }
+            h2{
+                font-size:18px;
+            }
+            hr{
+                margin:10px 0;
+            }
+        </style>
+        </head>
+        <body>
+            ${dadosComanda}
+
+            <script>
+                window.onload = function(){
+                    window.print();
+                    window.onafterprint = function(){
+                        window.close();
+                    }
+                }
+            <\/script>
+        </body>
+        </html>
+    `);
+
+    janela.document.close();
 }
 
 </script>
