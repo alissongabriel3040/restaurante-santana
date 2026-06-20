@@ -71,15 +71,21 @@ function criarComanda(){
         return;
     }
 
-    let numero = Date.now();
+    let ultimoNumero = localStorage.getItem("ultimaComanda") || 0;
+
+    let numero = Number(ultimoNumero) + 1;
+
+localStorage.setItem("ultimaComanda", numero);
+
+    let comanda = numero.toString().padStart(3, "0");
 
     let link =
     "https://alissongabriel3040.github.io/restaurante-santana/cliente.html?comanda="
-    + numero;
+    + comanda;
 
     document.getElementById("resultado").innerHTML = `
         <h3>Comanda criada</h3>
-        <p><b>Número:</b> ${numero}</p>
+        <p><b>Comanda:</b> ${comanda}</p>
         <p><b>Prato:</b> R$ ${Number(valor).toFixed(2)}</p>
     `;
 
