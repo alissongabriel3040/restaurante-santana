@@ -7,13 +7,17 @@
 
 <style>
 body{
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     max-width: 600px;
     margin: auto;
     padding: 20px;
 }
 
 h1{
+    text-align:center;
+}
+
+h2{
     text-align:center;
 }
 
@@ -25,6 +29,9 @@ select, button{
 
 .item{
     margin-top:10px;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:8px;
 }
 </style>
 </head>
@@ -32,12 +39,12 @@ select, button{
 
 <h1>🍽 Restaurante Santana</h1>
 
-<h2 id="comanda"></h2>
+<h2>Pedido da Mesa</h2>
 
-<label>Mesa:</label>
+<label>Selecione a mesa:</label>
 
 <select id="mesa">
-<option value="">Selecione a mesa</option>
+<option value="">Selecione</option>
 <option>1</option>
 <option>2</option>
 <option>3</option>
@@ -72,9 +79,82 @@ Guaraná - R$ 5,00
 Petit Gâteau - R$ 15,00
 </div>
 
-<button>
+<button onclick="enviarPedido()">
 Enviar Pedido
 </button>
+
+<script>
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbySZoE2S3Z0U8z_NT2z3sZ1YbvuaAr_8jxYSk94ysFF4_h-behfftGbYludlEWHd6q2/exec";
+
+function enviarPedido(){
+
+    let mesa = document.getElementById("mesa").value;
+
+    if(!mesa){
+        alert("Selecione uma mesa.");
+        return;
+    }
+
+    let pedidos = [];
+
+    if(document.getElementById("coca").checked){
+        pedidos.push({
+            item:"Coca-Cola 600ml",
+            valor:6
+        });
+    }
+
+    if(document.getElementById("guarana").checked){
+        pedidos.push({
+            item:"Guaraná",
+            valor:5
+        });
+    }
+
+    if(document.getElementById("agua").checked){
+        pedidos.push({
+            item:"Água",
+            valor:3
+        });
+    }
+
+    if(document.getElementById("petit").checked){
+        pedidos.push({
+            item:"Petit Gâteau",
+            valor:15
+        });
+    }
+
+    if(pedidos.length === 0){
+        alert("Escolha pelo menos um item.");
+        return;
+    }
+
+    pedidos.forEach(pedido => {
+
+        fetch(API_URL,{
+            method:"POST",
+            body:JSON.stringify({
+                comanda:"TESTE",
+                mesa:mesa,
+                item:pedido.item,
+                valor:pedido.valor
+            })
+        });
+
+    });
+
+    alert("Pedido enviado com sucesso!");
+
+    document.getElementById("coca").checked = false;
+    document.getElementById("guarana").checked = false;
+    document.getElementById("agua").checked = false;
+    document.getElementById("petit").checked = false;
+}
+
+</script>
 
 </body>
 </html>
