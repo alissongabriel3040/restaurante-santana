@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Caixa - Restaurante</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .caixa {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .total {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: right;
+    }
+
+    button {
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .finalizar {
+      background: green;
+      color: white;
+    }
+
+    .limpar {
+      background: red;
+      color: white;
+    }
+
+    .remover {
+      background: orange;
+      color: white;
+      padding: 5px;
+      width: auto;
+    }
+  </style>
+</head>
+<body>
+
+<h1>💰 Caixa do Restaurante</h1>
+
+<div class="caixa">
+
+  <div id="lista"></div>
+
+  <div class="total" id="total">Total: R$ 0,00</div>
+
+  <button class="finalizar" onclick="finalizar()">Finalizar Venda</button>
+  <button class="limpar" onclick="limpar()">Limpar Caixa</button>
+
+</div>
+
+<script>
+let pedido = JSON.parse(localStorage.getItem("pedido")) || [];
+
+function atualizar() {
+  let lista = document.getElementById("lista");
+  let total = 0;
+
+  lista.innerHTML = "";
+
+  pedido.forEach((item, index) => {
+    total += item.preco;
+
+    lista.innerHTML += `
+      <div class="item">
+        <span>${item.nome} - R$ ${item.preco.toFixed(2)}</span>
+        <button class="remover" onclick="remover(${index})">X</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("total").innerText = "Total: R$ " + total.toFixed(2);
+}
+
+function remover(index) {
+  pedido.splice(index, 1);
+  localStorage.setItem("pedido", JSON.stringify(pedido));
+  atualizar();
+}
+
+function finalizar() {
+  if (pedido.length === 0) {
+    alert("Caixa vazio!");
+    return;
+  }
+
+  alert("Venda finalizada com sucesso!");
+  pedido = [];
+  localStorage.removeItem("pedido");
+  atualizar();
+}
+
+function limpar() {
+  if (confirm("Tem certeza que quer limpar tudo?")) {
+    pedido = [];
+    localStorage.removeItem("pedido");
+    atualizar();
+  }
+}
+
+atualizar();
+</script>
+
+</body>
+</html>
