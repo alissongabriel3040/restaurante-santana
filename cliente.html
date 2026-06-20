@@ -13,11 +13,7 @@ body{
     padding: 20px;
 }
 
-h1{
-    text-align:center;
-}
-
-h2{
+h1,h2{
     text-align:center;
 }
 
@@ -39,7 +35,7 @@ select, button{
 
 <h1>🍽 Restaurante Santana</h1>
 
-<h2>Pedido da Mesa</h2>
+<h2 id="numeroComanda">Comanda 001</h2>
 
 <label>Selecione a mesa:</label>
 
@@ -87,6 +83,13 @@ Enviar Pedido
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbySZoE2S3Z0U8z_NT2z3sZ1YbvuaAr_8jxYSk94ysFF4_h-behfftGbYludlEWHd6q2/exec";
+
+// Lê a comanda do QR Code
+const params = new URLSearchParams(window.location.search);
+const comanda = params.get("comanda") || "001";
+
+document.getElementById("numeroComanda").innerText =
+"Comanda " + comanda;
 
 function enviarPedido(){
 
@@ -137,7 +140,7 @@ function enviarPedido(){
         fetch(API_URL,{
             method:"POST",
             body:JSON.stringify({
-                cliente.html?comanda=001,
+                comanda:comanda,
                 mesa:mesa,
                 item:pedido.item,
                 valor:pedido.valor
