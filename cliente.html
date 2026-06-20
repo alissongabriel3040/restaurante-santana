@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Restaurante Santana</title>
+<title>Cliente - Restaurante Santana</title>
 
 <style>
 body{
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     max-width: 600px;
     margin: auto;
     padding: 20px;
@@ -24,10 +24,7 @@ select, button{
 }
 
 .item{
-    border:1px solid #ccc;
-    padding:10px;
     margin-top:10px;
-    border-radius:8px;
 }
 </style>
 </head>
@@ -35,7 +32,7 @@ select, button{
 
 <h1>🍽 Restaurante Santana</h1>
 
-<h2 id="tituloComanda"></h2>
+<h2 id="comanda"></h2>
 
 <label>Mesa:</label>
 
@@ -53,103 +50,31 @@ select, button{
 <option>10</option>
 </select>
 
+<h3>Bebidas e Sobremesas</h3>
+
 <div class="item">
 <input type="checkbox" id="coca">
-<label>Coca-Cola 600ml - R$ 6,00</label>
+Coca-Cola 600ml - R$ 6,00
 </div>
 
 <div class="item">
 <input type="checkbox" id="guarana">
-<label>Guaraná - R$ 5,00</label>
+Guaraná - R$ 5,00
 </div>
 
 <div class="item">
 <input type="checkbox" id="agua">
-<label>Água - R$ 3,00</label>
+Água - R$ 3,00
 </div>
 
 <div class="item">
 <input type="checkbox" id="petit">
-<label>Petit Gâteau - R$ 15,00</label>
+Petit Gâteau - R$ 15,00
 </div>
 
-<button onclick="enviarPedido()">
+<button>
 Enviar Pedido
 </button>
-
-<script>
-
-const API_URL =
-"https://script.google.com/macros/s/AKfycbySZoE2S3Z0U8z_NT2z3sZ1YbvuaAr_8jxYSk94ysFF4_h-behfftGbYludlEWHd6q2/exec";
-
-const params = new URLSearchParams(window.location.search);
-const comanda = params.get("comanda");
-
-document.getElementById("tituloComanda").innerText =
-"Comanda #" + comanda;
-
-async function enviarPedido(){
-
-    let mesa = document.getElementById("mesa").value;
-
-    if(!mesa){
-        alert("Selecione a mesa.");
-        return;
-    }
-
-    let pedidos = [];
-
-    if(document.getElementById("coca").checked){
-        pedidos.push({
-            item:"Coca-Cola 600ml",
-            valor:6
-        });
-    }
-
-    if(document.getElementById("guarana").checked){
-        pedidos.push({
-            item:"Guaraná",
-            valor:5
-        });
-    }
-
-    if(document.getElementById("agua").checked){
-        pedidos.push({
-            item:"Água",
-            valor:3
-        });
-    }
-
-    if(document.getElementById("petit").checked){
-        pedidos.push({
-            item:"Petit Gâteau",
-            valor:15
-        });
-    }
-
-    if(pedidos.length === 0){
-        alert("Selecione pelo menos um item.");
-        return;
-    }
-
-    for(let pedido of pedidos){
-
-        await fetch(API_URL,{
-            method:"POST",
-            body:JSON.stringify({
-                comanda:comanda,
-                mesa:mesa,
-                item:pedido.item,
-                valor:pedido.valor
-            })
-        });
-
-    }
-
-    alert("Pedido enviado com sucesso!");
-}
-
-</script>
 
 </body>
 </html>
