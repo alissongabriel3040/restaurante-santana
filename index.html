@@ -15,9 +15,7 @@ body{
     padding: 20px;
 }
 
-h1{
-    text-align:center;
-}
+h1{text-align:center;}
 
 input, button{
     width:100%;
@@ -38,6 +36,24 @@ input, button{
     justify-content:center;
     margin-top:20px;
 }
+
+/* 🔥 área de impressão */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #printArea, #printArea * {
+        visibility: visible;
+    }
+
+    #printArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+}
 </style>
 </head>
 <body>
@@ -46,21 +62,24 @@ input, button{
 
 <h2>Nova Comanda</h2>
 
-<input
-type="number"
-step="0.01"
-id="valorPrato"
-placeholder="Valor do prato">
+<input type="number" step="0.01" id="valorPrato" placeholder="Valor do prato">
 
-<button onclick="criarComanda()">
-Criar Comanda
+<button onclick="criarComanda()">Criar Comanda</button>
+
+<button onclick="imprimirComanda()" style="background:green;color:white;">
+🖨️ Imprimir Comanda
 </button>
 
 <div id="resultado"></div>
 
 <div id="qrcode"></div>
 
+<!-- 🧾 ÁREA QUE VAI SER IMPRESSA -->
+<div id="printArea"></div>
+
 <script>
+
+let dadosComanda = "";
 
 function criarComanda(){
 
@@ -75,13 +94,20 @@ function criarComanda(){
 
     let numero = Number(ultimoNumero) + 1;
 
-localStorage.setItem("ultimaComanda", numero);
+    localStorage.setItem("ultimaComanda", numero);
 
     let comanda = numero.toString().padStart(3, "0");
 
     let link =
     "https://alissongabriel3040.github.io/restaurante-santana/cliente.html?comanda="
     + comanda;
+
+    dadosComanda = `
+        <h2>🍽 COMANDA RESTAURANTE SANTANA</h2>
+        <p><b>Número:</b> ${comanda}</p>
+        <p><b>Valor:</b> R$ ${Number(valor).toFixed(2)}</p>
+        <p><b>Link:</b> ${link}</p>
+    `;
 
     document.getElementById("resultado").innerHTML = `
         <h3>Comanda criada</h3>
@@ -99,6 +125,17 @@ localStorage.setItem("ultimaComanda", numero);
             height: 220
         }
     );
+
+    document.getElementById("printArea").innerHTML = dadosComanda;
+}
+
+function imprimirComanda(){
+    if(!dadosComanda){
+        alert("Crie uma comanda primeiro!");
+        return;
+    }
+
+    window.print();
 }
 
 </script>
