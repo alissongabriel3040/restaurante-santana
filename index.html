@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Restaurante Santana</title>
+<title>Restaurante Santana - Caixa</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
 body{
-    font-family: Arial;
-    max-width: 500px;
+    font-family: Arial, sans-serif;
+    max-width: 600px;
     margin: auto;
     padding: 20px;
 }
@@ -17,79 +19,80 @@ h1{
     text-align:center;
 }
 
-input, select{
-    width:100%;
-    padding:10px;
-    margin:5px 0;
-}
-
-button{
+input, button{
     width:100%;
     padding:12px;
     margin-top:10px;
-    cursor:pointer;
+    box-sizing:border-box;
+}
+
+#resultado{
+    margin-top:20px;
+    padding:15px;
+    border:1px solid #ccc;
+    border-radius:10px;
+}
+
+#qrcode{
+    display:flex;
+    justify-content:center;
+    margin-top:20px;
 }
 </style>
 </head>
-
 <body>
 
-<h1>Restaurante Santana</h1>
+<h1>🍽 Restaurante Santana</h1>
 
-<h2>Novo Pedido</h2>
+<h2>Nova Comanda</h2>
 
-<input type="text" id="comanda" placeholder="Comanda">
+<input
+type="number"
+step="0.01"
+id="valorPrato"
+placeholder="Valor do prato">
 
-<select id="mesa">
-<option value="">Selecione a mesa</option>
-<option>1</option>
-<option>2</option>
-<option>3</option>
-<option>4</option>
-<option>5</option>
-<option>6</option>
-<option>7</option>
-<option>8</option>
-<option>9</option>
-<option>10</option>
-</select>
+<button onclick="criarComanda()">
+Criar Comanda
+</button>
 
-<select id="item">
-<option>Coca-Cola 600ml</option>
-<option>Guaraná</option>
-<option>Água</option>
-<option>Petit Gâteau</option>
-</select>
+<div id="resultado"></div>
 
-<button onclick="enviarPedido()">Enviar Pedido</button>
+<div id="qrcode"></div>
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycbySZoE2S3Z0U8z_NT2z3sZ1YbvuaAr_8jxYSk94ysFF4_h-behfftGbYludlEWHd6q2/exec";
+function criarComanda(){
 
-function enviarPedido(){
+    let valor = document.getElementById("valorPrato").value;
 
-let item = document.getElementById("item").value;
+    if(!valor){
+        alert("Digite o valor do prato");
+        return;
+    }
 
-let valor = 0;
+    let numero = Date.now();
 
-if(item==="Coca-Cola 600ml") valor = 6;
-if(item==="Guaraná") valor = 5;
-if(item==="Água") valor = 3;
-if(item==="Petit Gâteau") valor = 15;
+    let link =
+    "https://alissongabriel3040.github.io/restaurante-santana/cliente.html?comanda="
+    + numero;
 
-fetch(API_URL,{
-method:"POST",
-body:JSON.stringify({
-comanda:document.getElementById("comanda").value,
-mesa:document.getElementById("mesa").value,
-item:item,
-valor:valor
-})
-})
-.then(()=>alert("Pedido enviado!"))
-.catch(()=>alert("Erro ao enviar"));
+    document.getElementById("resultado").innerHTML = `
+        <h3>Comanda criada</h3>
+        <p><b>Número:</b> ${numero}</p>
+        <p><b>Prato:</b> R$ ${Number(valor).toFixed(2)}</p>
+    `;
 
+    document.getElementById("qrcode").innerHTML = "";
+
+    new QRCode(
+        document.getElementById("qrcode"),
+        {
+            text: link,
+            width: 220,
+            height: 220
+        }
+    );
 }
 
 </script>
