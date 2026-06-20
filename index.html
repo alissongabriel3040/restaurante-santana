@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurante Santana</title>
+
+<style>
+body{
+    font-family: Arial;
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+}
+
+h1{
+    text-align:center;
+}
+
+input, select{
+    width:100%;
+    padding:10px;
+    margin:5px 0;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Restaurante Santana</h1>
+
+<h2>Novo Pedido</h2>
+
+<input type="text" id="comanda" placeholder="Comanda">
+
+<select id="mesa">
+<option value="">Selecione a mesa</option>
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+<option>6</option>
+<option>7</option>
+<option>8</option>
+<option>9</option>
+<option>10</option>
+</select>
+
+<select id="item">
+<option>Coca-Cola 600ml</option>
+<option>Guaraná</option>
+<option>Água</option>
+<option>Petit Gâteau</option>
+</select>
+
+<button onclick="enviarPedido()">Enviar Pedido</button>
+
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbySZoE2S3Z0U8z_NT2z3sZ1YbvuaAr_8jxYSk94ysFF4_h-behfftGbYludlEWHd6q2/exec";
+
+function enviarPedido(){
+
+let item = document.getElementById("item").value;
+
+let valor = 0;
+
+if(item==="Coca-Cola 600ml") valor = 6;
+if(item==="Guaraná") valor = 5;
+if(item==="Água") valor = 3;
+if(item==="Petit Gâteau") valor = 15;
+
+fetch(API_URL,{
+method:"POST",
+body:JSON.stringify({
+comanda:document.getElementById("comanda").value,
+mesa:document.getElementById("mesa").value,
+item:item,
+valor:valor
+})
+})
+.then(()=>alert("Pedido enviado!"))
+.catch(()=>alert("Erro ao enviar"));
+
+}
+
+</script>
+
+</body>
+</html>
