@@ -80,6 +80,8 @@ button.imprimir{
 <script>
 
 let dadosComanda = "";
+    const API_URL =
+"https://script.google.com/macros/s/AKfycbySZoE2S3Z0U8z_NT2z3sZ1YbvuaAr_8jxYSk94ysFF4_h-behfftGbYludlEWHd6q2/exec";
 
 function criarComanda(){
 
@@ -97,6 +99,15 @@ function criarComanda(){
     localStorage.setItem("ultimaComanda", numero);
 
     let comanda = numero.toString().padStart(3, "0");
+    fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({
+        comanda:comanda,
+        mesa:"0",
+        item:"Prato por quilo",
+        valor:Number(valor)
+    })
+});
 
     let link =
     "https://alissongabriel3040.github.io/restaurante-santana/cliente.html?comanda="
