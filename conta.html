@@ -8,7 +8,7 @@
 <style>
 body{
     font-family: Arial, sans-serif;
-    max-width: 600px;
+    max-width: 700px;
     margin:auto;
     padding:20px;
 }
@@ -22,8 +22,14 @@ input,button{
 #resultado{
     margin-top:20px;
     border:1px solid #ccc;
-    padding:15px;
     border-radius:10px;
+    padding:15px;
+}
+
+.total{
+    font-size:24px;
+    font-weight:bold;
+    color:green;
 }
 </style>
 </head>
@@ -34,30 +40,64 @@ input,button{
 <input
 type="text"
 id="comanda"
-placeholder="Número da comanda">
+placeholder="Digite a comanda">
 
 <button onclick="buscarConta()">
 Buscar Conta
 </button>
 
 <div id="resultado">
-Digite a comanda.
+Digite uma comanda para consultar.
 </div>
 
 <script>
 
-function buscarConta(){
+const API_URL =
+"https://script.google.com/macros/s/AKfycbySZoE2S3Z0U8z_NT2z3sZ1YbvuaAr_8jxYSk94ysFF4_h-behfftGbYludlEWHd6q2/exec";
+
+async function buscarConta(){
 
     let comanda =
     document.getElementById("comanda").value;
 
-    document.getElementById("resultado").innerHTML = `
-        <h3>Comanda ${comanda}</h3>
+    if(!comanda){
+        alert("Digite a comanda.");
+        return;
+    }
 
-        <p>⚠️ Em breve vamos conectar à planilha.</p>
+    let resposta =
+    await fetch(API_URL + "?comanda=" + comanda);
 
-        <p>Total: R$ 0,00</p>
+    let dados = await resposta.json();
+
+    let html = `
+        <h2>Comanda ${dados.comanda}</h2>
     `;
+
+    dados.itens.forEach(item => {
+
+        html += `
+            <p>
+            ${item.item}
+            - R$ ${item.valor}
+            </p>
+        `;
+
+    });
+
+    html += `
+        <hr>
+        <p class="total">
+        Total: R$ ${dados.total.toFixed(2)}
+        </p>
+
+        <button onclick="window.print()">
+        🖨️ Imprimir Conta
+        </button>
+    `;
+
+    document.getElementById("resultado").innerHTML =
+    html;
 }
 
 </script>
