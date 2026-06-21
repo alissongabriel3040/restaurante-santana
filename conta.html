@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fechar Conta - Restaurante Santana</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin:auto;
+    padding:20px;
+}
+
+input,button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+}
+
+#resultado{
+    margin-top:20px;
+    border:1px solid #ccc;
+    padding:15px;
+    border-radius:10px;
+}
+</style>
+</head>
+<body>
+
+<h1>💰 Fechar Conta</h1>
+
+<input
+type="text"
+id="comanda"
+placeholder="Número da comanda">
+
+<button onclick="buscarConta()">
+Buscar Conta
+</button>
+
+<div id="resultado">
+Digite a comanda.
+</div>
+
+<script>
+
+function buscarConta(){
+
+    let comanda =
+    document.getElementById("comanda").value;
+
+    document.getElementById("resultado").innerHTML = `
+        <h3>Comanda ${comanda}</h3>
+
+        <p>⚠️ Em breve vamos conectar à planilha.</p>
+
+        <p>Total: R$ 0,00</p>
+    `;
+}
+
+</script>
+
+</body>
+</html>
