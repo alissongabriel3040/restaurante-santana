@@ -1,22 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-<title>Fechar Conta</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fechar Conta - Restaurante Santana</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    max-width: 700px;
+    margin:auto;
+    padding:20px;
+}
+
+input,button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    box-sizing:border-box;
+}
+
+#resultado{
+    margin-top:20px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    padding:15px;
+}
+
+.total{
+    font-size:24px;
+    font-weight:bold;
+    color:green;
+}
+</style>
 </head>
 <body>
 
 <h1>💰 Fechar Conta</h1>
 
-<input type="text" id="comanda" placeholder="Digite a comanda">
+<input
+type="text"
+id="comanda"
+placeholder="Digite a comanda">
 
 <button onclick="buscarConta()">
 Buscar Conta
 </button>
 
-<div id="resultado"></div>
+<div id="resultado">
+Digite uma comanda.
+</div>
 
 <script>
-...
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbySZoE2S3Z0U8z_NT2z3sZ1YbvuaAr_8jxYSk94ysFF4_h-behfftGbYludlEWHd6q2/exec";
+
+async function buscarConta(){
+
+    let comanda = document.getElementById("comanda").value;
+
+    if(!comanda){
+        alert("Digite a comanda.");
+        return;
+    }
+
+    let resposta = await fetch(API_URL + "?comanda=" + comanda);
+    let dados = await resposta.json();
+
+    let html = `<h2>Comanda ${dados.comanda}</h2>`;
+
+    if(dados.itens.length === 0){
+
+        html += "<p>Nenhum item encontrado.</p>";
+
+    }else{
+
+        dados.itens.forEach(item => {
+
+            html += `
+            <p>
+                ${item.item} - R$ ${Number(item.valor).toFixed(2)}
+            </p>
+            `;
+
+        });
+
+        html += `
+        <hr>
+        <p class="total">
+            Total: R$ ${Number(dados.total).toFixed(2)}
+        </p>
+
+        <button onclick="window.print()">
+            🖨️ Imprimir Conta
+        </button>
+        `;
+    }
+
+    document.getElementById("resultado").innerHTML = html;
+}
+
 </script>
 
 </body>
